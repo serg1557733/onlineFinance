@@ -1,51 +1,73 @@
 import { Table } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
 const socket = io.connect('http://localhost:4000');
 socket.emit('start');
-socket.on('ticker', ticker => getResponse(ticker));
+
+function MyTable(){
+
+const [tickers,setTicker ] = useState([{}]);
+const [tickerName, setTickerValue] = useState('');
+const [tickerExchnge, setTickerExchange] = useState(0);
 
 
-function getResponse(response) {
-    response.map((item, i) => {
-        console.log(item);
-    });
-    
-};
+useEffect(() =>{
+    socket.on('ticker',setValue);
+},[]);
 
 
+function setValue(ticker){
+    setTicker(ticker);  
+} 
+
+//console.log(tickers);
+/* tickers.forEach(el=>{
+  for (let name in el){
+      console.log(name)
+  }
+}); */
 
 
-
-function MyTable({item}){
-  return(
-  <Table responsive>
+return( 
+<Table striped bordered hover variant="dark">
   <thead>
     <tr>
-      <th>{item}</th>
-        <th></th>
+    {tickers.map((t, index) => (
+        <th key={index}>{Object.keys(t)[index]}</th>
+      ))}
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>1</td>
-      {Array.from({ length: 12 }).map((_, index) => (
-        <td key={index}>Table cell {index}</td>
-      ))}
-    </tr>
-    <tr>
-      <td>2</td>
-      {Array.from({ length: 12 }).map((_, index) => (
-        <td key={index}>Table cell {index}</td>
-      ))}
-    </tr>
-    <tr>
-      <td>3</td>
-      {Array.from({ length: 12 }).map((_, index) => (
-        <td key={index}>Table cell {index}</td>
-      ))}
-    </tr>
+  
+    {tickers.map((t, index) =>{
+     // console.log(t);
+    //  console.log(index);
+      for (let key of Object.values(t)){
+          //console.log(Object.values(t)[index]);
+      return (
+              <tr key={index}>
+              {tickers.map((t, index) =>{
+              // console.log(t);
+             //  console.log(index);
+             (
+              <td key={index}>{Object.values(t)}</td>
+            )
+               for (let key of Object.values(t)){
+                   console.log(Object.values(t)[1]);
+               return (
+                       <td key={index}>{Object.values(t)[index]}</td>
+                     )
+               } 
+             } 
+             )}</tr>  
+            )
+      }  
+    } 
+    )}
   </tbody>
 </Table>
+
 )}
+
 export default MyTable;
